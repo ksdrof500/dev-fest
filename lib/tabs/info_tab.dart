@@ -1,33 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InfoTab extends StatefulWidget {
+class InfoTab extends StatelessWidget {
+  InfoTab(this.animationController);
 
-  final vsync;
+  final AnimationController animationController;
 
-  InfoTab(this.vsync);
-
-  final state = new _InfoTabState();
-
+  // BUILD POR ULTIMO
   @override
-  State<StatefulWidget> createState() {
-    return state;
-  }
-}
-
-class _InfoTabState extends State<InfoTab> {
-
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    animationController = new AnimationController(
-        vsync: widget.vsync, duration: new Duration(milliseconds: 300));
-  }
-
-@override
   Widget build(BuildContext context) {
     return new ScaleTransition(
       scale: animationController,
@@ -94,11 +74,4 @@ class _InfoTabState extends State<InfoTab> {
   _launchURL(url) async {
     await launch(url);
   }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-
-  }
-
+}

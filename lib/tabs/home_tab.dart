@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/datas/speaker_data.dart';
-import 'package:flutter_app/tiles/place_tile.dart';
+import 'package:flutter_app/tiles/talk_tile.dart';
 
 class HomeTab extends StatelessWidget {
+  final vsync;
+
+  HomeTab(this.vsync);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
@@ -15,10 +19,8 @@ class HomeTab extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         else
-          return ListView(
-            children:
-              snapshot.data.documents.map((doc) =>
-                    PlaceTile(SpeakerData.fromDocument(doc))).toList(),
+          return Container(
+            child: TalkTile(vsync, SpeakerData().fromListDocument(snapshot.data.documents))
           );
       },
     );

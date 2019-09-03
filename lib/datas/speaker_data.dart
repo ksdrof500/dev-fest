@@ -7,6 +7,8 @@ class SpeakerData {
   List speakerList;
   List imageList;
 
+  SpeakerData();
+
   SpeakerData.fromDocument(DocumentSnapshot snapshot) {
     id = snapshot.documentID;
     title = snapshot.data["title"];
@@ -15,4 +17,9 @@ class SpeakerData {
     imageList = snapshot.data["images"];
   }
 
+  List<SpeakerData> fromListDocument(List<DocumentSnapshot> snapshots) {
+    List<SpeakerData> speakers;
+    snapshots.map((doc) => speakers.add(SpeakerData.fromDocument(doc)));
+    return speakers;
+  }
 }

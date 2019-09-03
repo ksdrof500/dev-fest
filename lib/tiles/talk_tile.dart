@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/datas/speaker_data.dart';
 import 'package:flutter_app/pageTransformer/page_item.dart';
 import 'package:flutter_app/pageTransformer/page_transformer.dart';
-import 'package:flutter_app/widgets/error_connection.dart';
-
+import 'package:flutter_app/screens/speaker_screen.dart';
 
 class TalkTile extends StatefulWidget {
   final vsync;
-  var errorConection = false;
+  final List<SpeakerData> speakerList;
 
-  TalkTile(this.vsync);
+  TalkTile(this.vsync, this.speakerList);
 
-  final state = new _ContentFeaturedState();
+  final state = new _TalkTileState();
 
   @override
   State<StatefulWidget> createState() {
@@ -18,126 +18,62 @@ class TalkTile extends StatefulWidget {
   }
 }
 
-class _ContentFeaturedState extends State<TalkTile> {
-  List _destaque = new List();
+class _TalkTileState extends State<TalkTile> {
   AnimationController animationController;
 
-  var carregando = false;
-
   var positionFeatured = 0;
-
   var _context;
 
   @override
   void initState() {
     super.initState();
-
     animationController = new AnimationController(
         vsync: widget.vsync, duration: new Duration(milliseconds: 300));
-
-    loadNewsRecent();
   }
 
   @override
   Widget build(BuildContext context) {
     _context = context;
 
-    if (!widget.errorConection) {
-      return new GestureDetector(
-        child: new Stack(
-          children: <Widget>[
-            new FadeTransition(
-              opacity: animationController,
-              child: new Container(
-                child: new PageTransformer(
-                    pageViewBuilder: (context, visibilityResolver) {
-                      return new PageView.builder(
-                        controller: new PageController(viewportFraction: 0.9),
-                        itemCount: _destaque.length,
-                        onPageChanged: (position) {
-                          setState(() {
-                            positionFeatured = position;
-                          });
-                        },
-                        itemBuilder: (context, index) {
-                          final item = _destaque[index];
-                          final pageVisibility =
-                          visibilityResolver.resolvePageVisibility(index);
-                          return new IntroNewsItem(
-                              item: item, pageVisibility: pageVisibility);
-                        },
-                      );
-                    }),
-              ),
+    return new GestureDetector(
+      child: new Stack(
+        children: <Widget>[
+          new FadeTransition(
+            opacity: animationController,
+            child: new Container(
+              child: new PageTransformer(
+                  pageViewBuilder: (context, visibilityResolver) {
+                return new PageView.builder(
+                  controller: new PageController(viewportFraction: 0.9),
+                  itemCount: widget.speakerList.length,
+                  onPageChanged: (position) {
+                    setState(() {
+                      positionFeatured = position;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final item = widget.speakerList[index];
+                    final pageVisibility =
+                        visibilityResolver.resolvePageVisibility(index);
+                    return new IntroItem(
+                        speakerData: item, pageVisibility: pageVisibility);
+                  },
+                );
+              }),
             ),
-            _getProgress()
-          ],
-        ),
-        onTap: onTabFeatured,
-      );
-    } else {
-      return ErrorConnection();
-    }
+          ),
+        ],
+      ),
+      onTap: onTabFeatured,
+    );
   }
 
   onTabFeatured() {
-    IntroNews notice = _destaque[positionFeatured];
-
-//    Navigator.of(_context)
-//        .push(new MaterialPageRoute(builder: (BuildContext context) {
-//      return new DetailPage(notice.imageUrl, notice.title, notice.date,
-//          notice.description, notice.link, notice.origin);
-//    }));
-  }
-
-  Widget _getProgress() {
-    if (carregando) {
-      return new Container(
-        child: new Center(
-          child: new CircularProgressIndicator(),
-        ),
-      );
-    } else {
-      return new Container();
-    }
-  }
-
-
-  void loadNewsRecent() async {
-    setState(() {
-      _destaque.clear();
-      carregando = true;
-    });
-
-//    Map result = await repositoty.loadNewsRecent();
-
-//    if (result != null) {
-//      widget.errorConection = false;
-//
-//      setState(() {
-//        result['data'].forEach((item) {
-//          var destaque = new IntroNews(
-//              item['tittle'],
-//              item['category'],
-//              item['url_img'],
-//              item['description'],
-//              item['date'],
-//              item['link'],
-//              item['origin']);
-//
-//          _destaque.add(destaque);
-//        });
-//
-//        carregando = false;
-//
-//        animationController.forward();
-//      });
-//    } else {
-//      widget.errorConection = true;
-//      setState(() {
-//        carregando = false;
-//      });
-//    }
+    SpeakerData speaker = widget.speakerList[positionFeatured];
+    Navigator.of(_context)
+        .push(new MaterialPageRoute(builder: (BuildContext context) {
+      return new SpeakerScreen(speaker);
+    }));
   }
 
   @override

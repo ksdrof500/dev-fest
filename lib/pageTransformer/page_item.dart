@@ -1,27 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/datas/speaker_data.dart';
 import 'package:meta/meta.dart';
 import 'page_transformer.dart';
 
-class IntroNews {
-  IntroNews(this.title, this.category, this.imageUrl, this.description,
-      this.date, this.link, this.origin);
-
-  final String title;
-  final String category;
-  final String imageUrl;
-  final String date;
-  final String description;
-  final String link;
-  final String origin;
-}
-
-class IntroNewsItem extends StatelessWidget {
-  IntroNewsItem({
-    @required this.item,
+class IntroItem extends StatelessWidget {
+  IntroItem({
+    @required this.speakerData,
     @required this.pageVisibility,
   });
 
-  final IntroNews item;
+  final SpeakerData speakerData;
   final PageVisibility pageVisibility;
 
   Widget _applyTextEffects({
@@ -49,7 +37,7 @@ class IntroNewsItem extends StatelessWidget {
     final categoryText = _applyTextEffects(
       translationFactor: 300.0,
       child: new Text(
-        item.category,
+        speakerData.speakerList.first,
         style: textTheme.caption.copyWith(
           color: Colors.white70,
           fontWeight: FontWeight.bold,
@@ -65,7 +53,7 @@ class IntroNewsItem extends StatelessWidget {
       child: new Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: new Text(
-          item.title,
+          speakerData.title,
           style: textTheme.title.copyWith(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
           textAlign: TextAlign.center,
@@ -91,7 +79,7 @@ class IntroNewsItem extends StatelessWidget {
     try {
       if (url != '') {
         return new FadeInImage.assetNetwork(
-          placeholder: 'assets/place_holder.jpg',
+//          placeholder: 'assets/place_holder.jpg',
           image: url,
           fit: BoxFit.cover,
           alignment: new FractionalOffset(
@@ -100,15 +88,11 @@ class IntroNewsItem extends StatelessWidget {
           ),
         );
       } else {
-        return new Image.asset('assets/place_holder_2.jpg');
+//        return new Image.asset('assets/place_holder_2.jpg');
       }
     } catch (e) {
-      return new Image.asset('assets/place_holder_2.jpg');
+//      return new Image.asset('assets/place_holder_2.jpg');
     }
-  }
-
-  String _getImageUrl(url, height, width) {
-    return 'http://104.131.18.84/notice/tim.php?src=$url&h=$height&w=$width';
   }
 
   @override
@@ -137,7 +121,7 @@ class IntroNewsItem extends StatelessWidget {
         child: new Stack(
           fit: StackFit.expand,
           children: [
-            _getImageNetwork(_getImageUrl(item.imageUrl, 400, '')),
+            _getImageNetwork(speakerData.imageList.first),
             imageOverlayGradient,
             _buildTextContainer(context),
           ],
